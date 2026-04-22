@@ -8,16 +8,16 @@ const getJSTDateTime = (d) => {
     minute: '2-digit',
     second: '2-digit',
     timeZone: 'Asia/Tokyo',
-    hour12: false
+    hour12: false,
   });
 
   const parts = formatter.formatToParts(d);
-  const year = parts.find(p => p.type === 'year').value;
-  const month = parts.find(p => p.type === 'month').value;
-  const day = parts.find(p => p.type === 'day').value;
-  const hour = parts.find(p => p.type === 'hour').value;
-  const minute = parts.find(p => p.type === 'minute').value;
-  const second = parts.find(p => p.type === 'second').value;
+  const year = parts.find((p) => p.type === 'year').value;
+  const month = parts.find((p) => p.type === 'month').value;
+  const day = parts.find((p) => p.type === 'day').value;
+  const hour = parts.find((p) => p.type === 'hour').value;
+  const minute = parts.find((p) => p.type === 'minute').value;
+  const second = parts.find((p) => p.type === 'second').value;
 
   return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 };
@@ -48,7 +48,7 @@ const jstInputDateTimeToUtcOutputDateTime = () => {
     //       挙動を安定させるため、JSTであることを明示するために`+09:00`を付与する
     const d = new Date(jstDateTimeInput.value + '+09:00');
     utcDateTimeOutput.value = getUTCDateTime(d);
-  } catch (e) {
+  } catch {
     alert('DATETIMEのJSTの入力に誤りがあります');
   }
 };
@@ -63,19 +63,23 @@ const utcInputDateTimeToJstOutputDateTime = () => {
     //       挙動を安定させるため、UTCであることを明示するために`Z`を付与する
     const d = new Date(utcDateTimeInput.value + 'Z');
     jstDateTimeOutput.value = getJSTDateTime(d);
-  } catch (e) {
+  } catch {
     alert('DATETIMEのUTCの入力に誤りがあります');
   }
 };
 
 // ページ読み込み完了時
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener('DOMContentLoaded', () => {
   // 入力初期化
   initializeInput();
 
   // JST(DATETIME)からUTC(DATETIME)へ変換ボタンをクリックした時
-  document.querySelector('#btn-jst-2-utc-datetime').addEventListener('click', jstInputDateTimeToUtcOutputDateTime);
+  document
+    .querySelector('#btn-jst-2-utc-datetime')
+    .addEventListener('click', jstInputDateTimeToUtcOutputDateTime);
 
   // UTC(DATETIME)からJST(DATETIME)へ変換ボタンをクリックした時
-  document.querySelector('#btn-utc-2-jst-datetime').addEventListener('click', utcInputDateTimeToJstOutputDateTime);
+  document
+    .querySelector('#btn-utc-2-jst-datetime')
+    .addEventListener('click', utcInputDateTimeToJstOutputDateTime);
 });

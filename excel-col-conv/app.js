@@ -41,7 +41,9 @@ const updateColumnNumberOutput = () => {
     return;
   }
 
-  columnNumberOutput.value = String(convertColumnNameToNumber(normalizedColumnName));
+  columnNumberOutput.value = String(
+    convertColumnNameToNumber(normalizedColumnName)
+  );
 };
 
 const updateColumnNameOutput = () => {
@@ -56,7 +58,9 @@ const updateColumnNameOutput = () => {
     return;
   }
 
-  columnNameOutput.value = convertColumnNumberToName(Number(normalizedColumnNumber));
+  columnNameOutput.value = convertColumnNumberToName(
+    Number(normalizedColumnNumber)
+  );
 };
 
 document.addEventListener('DOMContentLoaded', () => {
