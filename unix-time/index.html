@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNIXタイム変換</title>
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <h1>UNIXタイム変換</h1>
+
+    <h3>UNIXタイム→JST</h3>
+    <div>
+      <div>
+        <input type="text" id="unix-input-time" class="date-input" />
+        <span>→</span>
+        <input
+          type="text"
+          id="jst-output-datetime"
+          class="date-output"
+          readonly
+        />
+      </div>
+      <br />
+      <input type="button" id="btn-unix-2-jst-datetime" value="変換" />
+    </div>
+
+    <h3>JST→UNIXタイム</h3>
+    <div>
+      <div>
+        <input type="text" id="jst-input-datetime" class="date-input" />
+        <span>→</span>
+        <input type="text" id="unix-output-time" class="date-output" readonly />
+      </div>
+      <br />
+      <input type="button" id="btn-jst-2-unix-time" value="変換" />
+    </div>
+  </body>
+</html>
