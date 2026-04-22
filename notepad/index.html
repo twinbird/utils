@@ -1,7 +1,6 @@
 <!doctype html>
 <!--
 Keyboard shortcuts
-https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts
 
 Ctrl+s -> save file.
 -->
@@ -11,13 +10,15 @@ Ctrl+s -> save file.
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>メモ帳</title>
     <link rel="stylesheet" href="app.css" />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.37.2/ace.js"
-      defer
-    ></script>
     <script src="app.js" defer></script>
   </head>
   <body>
-    <div id="editor"></div>
+    <textarea
+      id="editor"
+      aria-label="メモ帳エディタ"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+    ></textarea>
   </body>
 </html>

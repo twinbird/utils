@@ -12,7 +12,6 @@ module.exports = [
       ecmaVersion: 'latest',
       sourceType: 'script',
       globals: {
-        ace: 'readonly',
         ...globals.browser,
       },
     },

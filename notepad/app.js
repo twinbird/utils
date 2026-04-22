@@ -1,8 +1,7 @@
 const STORAGE_KEY = 'storage_key';
-const CURSOR_POSITION_HEAD = -1;
 
 function load() {
-  return localStorage.getItem(STORAGE_KEY);
+  return localStorage.getItem(STORAGE_KEY) ?? '';
 }
 
 function save(txt) {
@@ -18,29 +17,42 @@ function downloadText(txt) {
   anchor.click();
 }
 
+function insertText(editor, text) {
+  const start = editor.selectionStart;
+  const end = editor.selectionEnd;
+
+  editor.setRangeText(text, start, end, 'end');
+  save(editor.value);
+}
+
 function init() {
-  const editor = ace.edit('editor');
+  const editor = document.getElementById('editor');
 
-  editor.setShowPrintMargin(false);
-  editor.setOptions({
-    fontSize: '10.5pt',
+  if (!editor) {
+    return;
+  }
+
+  editor.value = load();
+
+  editor.addEventListener('input', function () {
+    save(editor.value);
   });
 
-  editor.session.on('change', function (_delta) {
-    const txt = editor.getValue();
-    save(txt);
+  editor.addEventListener('keydown', function (event) {
+    if (event.key === 'Tab') {
+      event.preventDefault();
+      insertText(editor, '\t');
+      return;
+    }
+
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
+      event.preventDefault();
+      downloadText(editor.value);
+    }
   });
 
-  editor.commands.addCommand({
-    name: 'save',
-    bindKey: { win: 'Ctrl-S', mac: 'Cmd-S' },
-    exec: function (currentEditor) {
-      downloadText(currentEditor.session.getValue());
-    },
-  });
-
-  editor.setValue(load(), CURSOR_POSITION_HEAD);
   editor.focus();
+  editor.setSelectionRange(0, 0);
 }
 
 init();
