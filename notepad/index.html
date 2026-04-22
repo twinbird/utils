@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+Keyboard shortcuts
+https://github.com/ajaxorg/ace/wiki/Default-Keyboard-Shortcuts
+
+Ctrl+s -> save file.
+-->
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>メモ帳</title>
+<style type="text/css" media="screen">
+#editor { 
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+</style>
+</head>
+<body>
+<div id="editor"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.37.2/ace.js"></script>
+<script>
+const STORAGE_KEY = "storage_key";
+const CURSOR_POSITION_HEAD = -1;
+
+function load() {
+  return localStorage.getItem(STORAGE_KEY);
+}
+
+function save(txt) {
+  localStorage.setItem(STORAGE_KEY, txt);
+}
+
+function downloadText(txt) {
+  const blob = new Blob([txt], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href =  URL.createObjectURL(blob);
+  a.download = 'note.txt';
+  a.click();
+}
+
+function init() {
+  var e = ace.edit("editor");
+  
+  e.setShowPrintMargin(false);
+  e.setOptions({
+    fontSize: "10.5pt"
+  });
+  
+  e.session.on('change', function(delta) {
+    const txt = e.getValue();
+    save(txt);
+  });
+  e.commands.addCommand({
+    name: 'save',
+    bindKey: {win: "Ctrl-S", "mac": "Cmd-S"},
+    exec: function(editor) {
+      downloadText(editor.session.getValue());
+    }
+  });
+  
+  e.setValue(load(), CURSOR_POSITION_HEAD);
+  e.focus();
+}
+
+init();
+</script>
+</body>
+</html>
