@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>時刻差計算</title>
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <h1>時刻差計算</h1>
+
+    <div>
+      <label for="start-datetime">開始時刻</label>
+      <input
+        type="text"
+        id="start-datetime"
+        class="datetime-input"
+        placeholder="2026-04-23 10:36:50"
+      />
+    </div>
+
+    <div class="input-row">
+      <label for="end-datetime">終了時刻</label>
+      <input
+        type="text"
+        id="end-datetime"
+        class="datetime-input"
+        placeholder="2026-04-23 10:36:50"
+      />
+    </div>
+
+    <div class="button-row">
+      <input type="button" id="calculate-button" value="計算する" />
+    </div>
+
+    <div class="output-row">
+      <label for="time-diff-output">時間の差</label>
+      <input type="text" id="time-diff-output" class="diff-output" readonly />
+    </div>
+
+    <div class="output-row">
+      <label for="minute-diff-output">分換算</label>
+      <input type="text" id="minute-diff-output" class="diff-output" readonly />
+    </div>
+  </body>
+</html>
