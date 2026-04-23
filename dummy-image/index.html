@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ダミー画像生成</title>
+    <meta
+      name="description"
+      content="ソフト開発時のモックやプレースホルダーとして使えるダミー画像をブラウザ上で生成します。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ダミー画像生成</h1>
+
+      <div class="layout">
+        <section class="panel">
+          <h2>入力</h2>
+
+          <div class="field">
+            <label for="preset-size">よく使うサイズ</label>
+            <select id="preset-size">
+              <option value="custom" selected>カスタム</option>
+              <option value="16x16-favicon">16x16 | favicon</option>
+              <option value="32x32-icon">32x32 | icon</option>
+              <option value="150x150-square">150x150 | square</option>
+              <option value="320x180-thumbnail">320x180 | thumbnail</option>
+              <option value="600x400-banner">600x400 | banner</option>
+              <option value="1200x630-ogp">1200x630 | ogp</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <div class="field">
+              <label for="image-width">幅 (px)</label>
+              <input
+                type="number"
+                id="image-width"
+                min="1"
+                max="4096"
+                value="150"
+              />
+            </div>
+
+            <div class="field">
+              <label for="image-height">高さ (px)</label>
+              <input
+                type="number"
+                id="image-height"
+                min="1"
+                max="4096"
+                value="150"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="display-text">中央に表示する文字</label>
+            <input type="text" id="display-text" value="150x150" />
+          </div>
+
+          <div class="field-group">
+            <div class="field">
+              <label for="background-color">背景色</label>
+              <input type="color" id="background-color" value="#d9d9d9" />
+            </div>
+
+            <div class="field">
+              <label for="text-color">文字色</label>
+              <input type="color" id="text-color" value="#808080" />
+            </div>
+          </div>
+
+          <button id="download-btn" type="button">ダウンロード</button>
+        </section>
+
+        <section class="panel">
+          <h2>出力</h2>
+          <p id="image-meta" class="image-meta">150x150 px</p>
+
+          <div class="preview-frame">
+            <canvas
+              id="preview-canvas"
+              width="150"
+              height="150"
+              aria-label="作成されたダミー画像"
+            ></canvas>
+          </div>
+        </section>
+      </div>
+    </div>
+  </body>
+</html>

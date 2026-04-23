@@ -1,0 +1,145 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+  color: #222;
+}
+
+.container {
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.panel {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field-group {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input[type='number'],
+input[type='text'],
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+input[type='color'] {
+  width: 100%;
+  height: 44px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background: #fff;
+}
+
+button {
+  width: 100%;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0069d9;
+}
+
+.image-meta {
+  margin: 0 0 16px;
+  color: #555;
+}
+
+.preview-frame {
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #c7c7c7;
+  border-radius: 12px;
+  background:
+    linear-gradient(45deg, #f3f3f3 25%, transparent 25%),
+    linear-gradient(-45deg, #f3f3f3 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f3f3f3 75%),
+    linear-gradient(-45deg, transparent 75%, #f3f3f3 75%);
+  background-size: 24px 24px;
+  background-position:
+    0 0,
+    0 12px,
+    12px -12px,
+    -12px 0;
+}
+
+#preview-canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #d0d0d0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 720px) {
+  body {
+    margin: 16px;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+
+  .field-group {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-frame {
+    min-height: 280px;
+  }
+}
