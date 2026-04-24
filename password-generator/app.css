@@ -1,0 +1,102 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+  color: #222;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+.panel {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.field span {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+input,
+button {
+  font: inherit;
+}
+
+input[type='number'],
+input[type='text'] {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+fieldset {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px 16px;
+  margin: 0 0 16px;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+legend {
+  padding: 0 6px;
+  font-weight: bold;
+}
+
+.result-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+}
+
+#result {
+  flex: 1;
+  min-width: 0;
+  background: #f1f1f1;
+}
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  background: #007bff;
+}
+
+#copy-btn {
+  background: #198754;
+}
+
+#regenerate-btn {
+  margin-top: 4px;
+}
+
+button:disabled {
+  background: #9aa0a6;
+  cursor: not-allowed;
+}
