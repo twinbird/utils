@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Base64エンコード/デコード</title>
+    <meta
+      name="description"
+      content="テキストをBase64形式にエンコード、またはBase64文字列をデコードできるツールです。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Base64エンコード/デコード</h1>
+
+      <label for="source-text">入力</label>
+      <textarea
+        id="source-text"
+        spellcheck="false"
+        placeholder="変換したいテキスト、またはBase64文字列を入力してください"
+      ></textarea>
+
+      <div class="button-row">
+        <button id="encode-btn" type="button">エンコード</button>
+        <button id="decode-btn" type="button">デコード</button>
+        <button id="copy-btn" type="button">結果をコピー</button>
+        <button id="swap-btn" type="button">結果を入力へ移す</button>
+      </div>
+
+      <p id="status-message" class="status-message" aria-live="polite"></p>
+
+      <label for="result-text">変換結果</label>
+      <textarea
+        id="result-text"
+        readonly
+        spellcheck="false"
+        placeholder="ここに変換結果が表示されます"
+      ></textarea>
+    </div>
+  </body>
+</html>
