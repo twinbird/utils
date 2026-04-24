@@ -11,8 +11,12 @@ body {
   padding: 16px;
   border: 0;
   resize: none;
-  font: 400 10.5pt/1.6 'SFMono-Regular', Consolas, 'Liberation Mono',
-    Menlo, monospace;
+  font:
+    400 10.5pt/1.6 'SFMono-Regular',
+    Consolas,
+    'Liberation Mono',
+    Menlo,
+    monospace;
   color: #1f2937;
   background: #f8fafc;
   tab-size: 2;
