@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>アウトラインエディタ</title>
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <main class="workspace" aria-label="アウトラインエディタ">
+        <section
+          id="outline"
+          class="outline"
+          aria-label="アウトライン"
+        ></section>
+      </main>
+      <aside id="help-panel" class="help-panel" aria-label="キーバインド">
+        <h2>キーバインド</h2>
+        <dl>
+          <div>
+            <dt>Enter</dt>
+            <dd>現在位置で分割して次のブレットを追加</dd>
+          </div>
+          <div>
+            <dt>Tab</dt>
+            <dd>ネストを深くする</dd>
+          </div>
+          <div>
+            <dt>Shift+Tab</dt>
+            <dd>ネストを浅くする</dd>
+          </div>
+          <div>
+            <dt>Ctrl+A</dt>
+            <dd>行頭へ移動</dd>
+          </div>
+          <div>
+            <dt>Ctrl+E</dt>
+            <dd>行末へ移動</dd>
+          </div>
+          <div>
+            <dt>Ctrl+N / Ctrl+P</dt>
+            <dd>上下のブレットへ移動</dd>
+          </div>
+          <div>
+            <dt>Ctrl+Shift+N/P, Ctrl+Shift+↓/↑</dt>
+            <dd>ブレット自体を上下へ移動</dd>
+          </div>
+          <div>
+            <dt>Ctrl+.</dt>
+            <dd>子ブレットを折りたたむ/開く</dd>
+          </div>
+          <div>
+            <dt>Ctrl+? / Ctrl+/</dt>
+            <dd>ヘルプを表示/非表示</dd>
+          </div>
+        </dl>
+      </aside>
+    </div>
+  </body>
+</html>
