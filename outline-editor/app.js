@@ -313,6 +313,47 @@ function removeCurrentOrMerge(element) {
   return true;
 }
 
+function collectIds(item, result = new Set()) {
+  result.add(item.id);
+  item.children.forEach((child) => collectIds(child, result));
+  return result;
+}
+
+function deleteCurrent() {
+  const entry = getEntry(activeId);
+
+  if (!entry) {
+    return;
+  }
+
+  const flatItems = flatten();
+  const index = getActiveIndex(flatItems);
+  const removedIds = collectIds(entry.item);
+  const previous = flatItems
+    .slice(0, index)
+    .reverse()
+    .find((flatItem) => !removedIds.has(flatItem.item.id));
+  const next = flatItems
+    .slice(index + 1)
+    .find((flatItem) => !removedIds.has(flatItem.item.id));
+
+  entry.siblings.splice(entry.index, 1);
+
+  if (items.length === 0) {
+    const item = createItem();
+    items.push(item);
+    activeId = item.id;
+    pendingOffset = 0;
+  } else {
+    const focusItem = previous?.item ?? next?.item ?? flatten()[0]?.item;
+    activeId = focusItem?.id ?? null;
+    pendingOffset = focusItem ? focusItem.text.length : 0;
+  }
+
+  saveItems();
+  render();
+}
+
 function toggleCollapsed(id = activeId) {
   const entry = getEntry(id);
 
@@ -419,11 +460,49 @@ function handleKeydown(event) {
     return;
   }
 
+  if (event.altKey && !event.ctrlKey && !event.metaKey) {
+    const isMoveDown = event.key === 'ArrowDown' || event.code === 'KeyJ';
+    const isMoveUp = event.key === 'ArrowUp' || event.code === 'KeyK';
+
+    if (
+      !event.shiftKey &&
+      (event.key === '.' || event.code === 'Period')
+    ) {
+      event.preventDefault();
+      updateItemText(target);
+      toggleCollapsed();
+      return;
+    }
+
+    if (
+      !event.shiftKey &&
+      (event.key === 'Backspace' || event.code === 'Backspace')
+    ) {
+      event.preventDefault();
+      updateItemText(target);
+      deleteCurrent();
+      return;
+    }
+
+    if (isMoveDown || isMoveUp) {
+      event.preventDefault();
+      updateItemText(target);
+
+      const delta = isMoveDown ? 1 : -1;
+
+      if (event.shiftKey) {
+        moveItem(delta);
+      } else {
+        moveFocus(delta, getCaretOffset(target));
+      }
+
+      return;
+    }
+  }
+
   if (!event.ctrlKey || event.metaKey || event.altKey) {
     return;
   }
-
-  const key = event.key.toLowerCase();
 
   if (isShortcut(event, 'a', 'KeyA')) {
     event.preventDefault();
@@ -441,42 +520,6 @@ function handleKeydown(event) {
     event.preventDefault();
     updateItemText(target);
     downloadPlainText();
-    return;
-  }
-
-  if (
-    isShortcut(event, 'n', 'KeyN') ||
-    (event.shiftKey && key === 'arrowdown')
-  ) {
-    event.preventDefault();
-    updateItemText(target);
-
-    if (event.shiftKey) {
-      moveItem(1);
-    } else {
-      moveFocus(1, getCaretOffset(target));
-    }
-
-    return;
-  }
-
-  if (isShortcut(event, 'p', 'KeyP') || (event.shiftKey && key === 'arrowup')) {
-    event.preventDefault();
-    updateItemText(target);
-
-    if (event.shiftKey) {
-      moveItem(-1);
-    } else {
-      moveFocus(-1, getCaretOffset(target));
-    }
-
-    return;
-  }
-
-  if (event.key === '.' || event.code === 'Period') {
-    event.preventDefault();
-    updateItemText(target);
-    toggleCollapsed();
     return;
   }
 
