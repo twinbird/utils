@@ -3,15 +3,8 @@ const STORAGE_KEY = 'outline-editor.items';
 const defaultItems = [
   {
     id: crypto.randomUUID(),
-    text: 'ここに書き始める',
-    children: [
-      {
-        id: crypto.randomUUID(),
-        text: 'Tab / Shift+Tab でネストを変更',
-        collapsed: false,
-        children: [],
-      },
-    ],
+    text: '',
+    children: [],
     collapsed: false,
   },
 ];
@@ -130,7 +123,7 @@ function renderList(nodes) {
     content.contentEditable = 'true';
     content.spellcheck = false;
     content.dataset.id = item.id;
-    content.dataset.placeholder = '空のブレット';
+    content.setAttribute('placeholder', '空のブレット');
     content.textContent = item.text;
     content.setAttribute('role', 'textbox');
     content.setAttribute('aria-label', 'ブレット');

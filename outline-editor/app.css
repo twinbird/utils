@@ -129,7 +129,7 @@ button:hover {
 
 .bullet-content:empty::before {
   color: #8a96a3;
-  content: attr(data-placeholder);
+  content: attr(placeholder);
 }
 
 .help-panel {
