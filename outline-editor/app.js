@@ -353,6 +353,26 @@ function toggleHelp() {
   shell.classList.toggle('help-hidden', !isHidden);
 }
 
+function toPlainText(nodes = items, depth = 0, lines = []) {
+  nodes.forEach((item) => {
+    lines.push(`${'  '.repeat(depth)}- ${item.text}`);
+    toPlainText(item.children, depth + 1, lines);
+  });
+
+  return lines.join('\n');
+}
+
+function downloadPlainText() {
+  const blob = new Blob([`${toPlainText()}\n`], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+
+  link.href = url;
+  link.download = 'outline.txt';
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function handleKeydown(event) {
   const target = event.target;
 
@@ -414,6 +434,13 @@ function handleKeydown(event) {
   if (isShortcut(event, 'e', 'KeyE')) {
     event.preventDefault();
     setCaretOffset(target, getPlainText(target).length);
+    return;
+  }
+
+  if (isShortcut(event, 's', 'KeyS')) {
+    event.preventDefault();
+    updateItemText(target);
+    downloadPlainText();
     return;
   }
 
