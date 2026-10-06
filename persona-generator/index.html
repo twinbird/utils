@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ペルソナ生成（ダミー会員登録情報）</title>
+    <meta
+      name="description"
+      content="日本の一般的なWebサイトのユーザー登録に必要なダミー情報をブラウザ上で生成するツールです。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>ペルソナ生成（ダミー会員登録情報）</h1>
+
+      <section class="panel" aria-labelledby="settings-heading">
+        <h2 id="settings-heading">生成条件</h2>
+        <div class="options-grid">
+          <label class="field">
+            <span>性別</span>
+            <select id="gender-select">
+              <option value="any">指定なし（ランダム）</option>
+              <option value="male">男性</option>
+              <option value="female">女性</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>年代</span>
+            <select id="age-group-select">
+              <option value="any">指定なし（18〜69歳）</option>
+              <option value="20s">20代（20〜29歳）</option>
+              <option value="30s">30代（30〜39歳）</option>
+              <option value="40s">40代（40〜49歳）</option>
+              <option value="50s">50代（50〜59歳）</option>
+              <option value="60s">60代（60〜69歳）</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="actions-row">
+          <button id="generate-btn" type="button" class="btn-primary">
+            再生成
+          </button>
+          <button id="copy-json-btn" type="button" class="btn-secondary">
+            JSONで一括コピー
+          </button>
+          <button id="copy-text-btn" type="button" class="btn-secondary">
+            テキストで一括コピー
+          </button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="result-heading">
+        <h2 id="result-heading">生成結果</h2>
+
+        <div class="persona-grid">
+          <div class="field-group">
+            <label for="name">氏名（漢字）</label>
+            <div class="input-with-copy">
+              <input id="name" type="text" readonly />
+              <button type="button" class="copy-field-btn" data-target="name">
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="kana">氏名（フリガナ）</label>
+            <div class="input-with-copy">
+              <input id="kana" type="text" readonly />
+              <button type="button" class="copy-field-btn" data-target="kana">
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="gender">性別</label>
+            <div class="input-with-copy">
+              <input id="gender" type="text" readonly />
+              <button type="button" class="copy-field-btn" data-target="gender">
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="birthdate">生年月日（年齢）</label>
+            <div class="input-with-copy">
+              <input id="birthdate" type="text" readonly />
+              <button
+                type="button"
+                class="copy-field-btn"
+                data-target="birthdate"
+              >
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="zipcode">郵便番号</label>
+            <div class="input-with-copy">
+              <input id="zipcode" type="text" readonly />
+              <button
+                type="button"
+                class="copy-field-btn"
+                data-target="zipcode"
+              >
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group full-width">
+            <label for="address">住所</label>
+            <div class="input-with-copy">
+              <input id="address" type="text" readonly />
+              <button
+                type="button"
+                class="copy-field-btn"
+                data-target="address"
+              >
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="phone">電話番号</label>
+            <div class="input-with-copy">
+              <input id="phone" type="text" readonly />
+              <button type="button" class="copy-field-btn" data-target="phone">
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="email">メールアドレス</label>
+            <div class="input-with-copy">
+              <input id="email" type="text" readonly />
+              <button type="button" class="copy-field-btn" data-target="email">
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="occupation">職業</label>
+            <div class="input-with-copy">
+              <input id="occupation" type="text" readonly />
+              <button
+                type="button"
+                class="copy-field-btn"
+                data-target="occupation"
+              >
+                コピー
+              </button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="password">パスワード</label>
+            <div class="input-with-copy">
+              <input id="password" type="text" readonly />
+              <button
+                type="button"
+                class="copy-field-btn"
+                data-target="password"
+              >
+                コピー
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </main>
+  </body>
+</html>
