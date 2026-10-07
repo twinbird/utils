@@ -464,10 +464,7 @@ function handleKeydown(event) {
     const isMoveDown = event.key === 'ArrowDown' || event.code === 'KeyJ';
     const isMoveUp = event.key === 'ArrowUp' || event.code === 'KeyK';
 
-    if (
-      !event.shiftKey &&
-      (event.key === '.' || event.code === 'Period')
-    ) {
+    if (!event.shiftKey && (event.key === '.' || event.code === 'Period')) {
       event.preventDefault();
       updateItemText(target);
       toggleCollapsed();
