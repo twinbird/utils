@@ -5,12 +5,16 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier . --write",
-    "format:check": "prettier . --check"
+    "format:check": "prettier . --check",
+    "copy-vendor": "node -e \"require('fs').copyFileSync('node_modules/heic2any/dist/heic2any.min.js', 'heic-to-jpeg/heic2any.min.js')\""
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.2.1",
     "globals": "^17.5.0",
     "prettier": "^3.8.3"
+  },
+  "dependencies": {
+    "heic2any": "^0.0.4"
   }
 }

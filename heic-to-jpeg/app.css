@@ -1,0 +1,234 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+  color: #222;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.drop-zone {
+  border: 2px dashed #007bff;
+  border-radius: 8px;
+  padding: 32px 20px;
+  text-align: center;
+  background: #fff;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.drop-zone.is-dragover {
+  background: #e9f3ff;
+  border-color: #0056b3;
+}
+
+.drop-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.drop-subtext {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px;
+}
+
+.file-select-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.file-select-btn:hover {
+  background: #0056b3;
+}
+
+.settings-panel {
+  background: #fff;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.quality-label {
+  font-size: 16px;
+  font-weight: bold;
+  min-width: 140px;
+}
+
+input[type='range'] {
+  flex: 1;
+  min-width: 180px;
+  height: 6px;
+  cursor: pointer;
+}
+
+.button-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  background: #007bff;
+  font: inherit;
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+button:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+button.secondary-btn {
+  background: #6c757d;
+}
+
+button.secondary-btn:hover:not(:disabled) {
+  background: #545b62;
+}
+
+button:disabled {
+  background: #9aa0a6;
+  cursor: not-allowed;
+}
+
+.status-message {
+  min-height: 24px;
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: #c62828;
+}
+
+.status-message.is-success {
+  color: #2e7d32;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.file-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.preview-container {
+  width: 90px;
+  height: 90px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f0f0f0;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.preview-spinner {
+  font-size: 13px;
+  color: #666;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 220px;
+}
+
+.file-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 6px;
+  word-break: break-all;
+}
+
+.file-meta {
+  font-size: 13px;
+  color: #666;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.status-badge.converting {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.status-badge.done {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-badge.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.file-actions button {
+  padding: 8px 14px;
+  font-size: 14px;
+}

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HEICからJPEGへ変換</title>
+    <meta
+      name="description"
+      content="HEIC形式（.heic / .heif）の画像をブラウザ上でJPEG形式（.jpg）へ変換・保存できるツールです。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="heic2any.min.js"></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>HEICからJPEGへ変換</h1>
+
+      <div
+        id="drop-zone"
+        class="drop-zone"
+        role="region"
+        aria-label="ファイルドロップエリア"
+      >
+        <p class="drop-text">ここにHEIC / HEIFファイルをドラッグ＆ドロップ</p>
+        <p class="drop-subtext">または</p>
+        <label for="file-input" class="file-select-btn">ファイルを選択</label>
+        <input
+          type="file"
+          id="file-input"
+          accept=".heic,.heif,image/heic,image/heif"
+          multiple
+          hidden
+        />
+      </div>
+
+      <div class="settings-panel">
+        <div class="setting-row">
+          <label for="quality-slider" class="quality-label">
+            JPEG画質: <span id="quality-value">80</span>%
+          </label>
+          <input
+            type="range"
+            id="quality-slider"
+            min="10"
+            max="100"
+            value="80"
+            step="5"
+          />
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button id="download-all-btn" type="button" disabled>
+          すべてダウンロード
+        </button>
+        <button id="clear-btn" type="button" disabled class="secondary-btn">
+          全削除
+        </button>
+      </div>
+
+      <p id="status-message" class="status-message" aria-live="polite"></p>
+
+      <div id="file-list" class="file-list"></div>
+    </div>
+  </body>
+</html>

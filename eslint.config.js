@@ -3,7 +3,7 @@ const globals = require('globals');
 
 module.exports = [
   {
-    ignores: ['eslint.config.js', 'node_modules/**'],
+    ignores: ['eslint.config.js', 'node_modules/**', '**/*.min.js'],
   },
   js.configs.recommended,
   {
