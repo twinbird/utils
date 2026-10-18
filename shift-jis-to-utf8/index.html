@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shift_JISからUTF-8へ変換</title>
+    <meta
+      name="description"
+      content="Shift_JIS（CP932）のテキストファイルをブラウザー内でUTF-8へ変換してダウンロードできます。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Shift_JISからUTF-8へ変換</h1>
+      <p>
+        Shift_JIS（CP932）のテキストファイルを選ぶと、UTF-8に変換してダウンロードできます。
+      </p>
+
+      <label for="source-file">Shift_JIS（CP932）ファイル</label>
+      <input id="source-file" type="file" />
+
+      <div class="button-row">
+        <button id="convert-btn" type="button" disabled>
+          変換してダウンロード
+        </button>
+      </div>
+
+      <p id="status-message" class="status-message" aria-live="polite"></p>
+      <p class="note">
+        日本語Windowsで一般的なCP932（Windows-31J）として読み込みます。ファイルの内容はサーバーへ送信されません。
+      </p>
+      <p>
+        <a href="../shift-jis-converter/">UTF-8からShift_JIS（CP932）へ変換</a>
+      </p>
+    </main>
+  </body>
+</html>
