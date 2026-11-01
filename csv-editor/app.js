@@ -1,0 +1,262 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const { CsvCore } = window;
+
+  const sourceFile = document.getElementById('source-file');
+  const dropArea = document.getElementById('drop-area');
+  const openEncoding = document.getElementById('open-encoding');
+  const openDelimiter = document.getElementById('open-delimiter');
+  const newButton = document.getElementById('new-btn');
+  const statusMessage = document.getElementById('status-message');
+  const editor = document.getElementById('editor');
+  const grid = document.getElementById('grid');
+  const addRowButton = document.getElementById('add-row-btn');
+  const addColButton = document.getElementById('add-col-btn');
+  const saveFilename = document.getElementById('save-filename');
+  const saveEncoding = document.getElementById('save-encoding');
+  const saveNewline = document.getElementById('save-newline');
+  const saveBom = document.getElementById('save-bom');
+  const downloadButton = document.getElementById('download-btn');
+
+  let rows = [];
+  let currentDelimiter = ',';
+  let editing = null;
+
+  const ENCODING_LABELS = {
+    'utf-8': 'UTF-8',
+    shift_jis: 'Shift_JIS（CP932）',
+    'utf-16le': 'UTF-16LE',
+    'utf-16be': 'UTF-16BE',
+  };
+
+  const setStatusMessage = (message, isSuccess = false) => {
+    statusMessage.textContent = message;
+    statusMessage.classList.toggle('is-success', isSuccess);
+  };
+
+  // Excel形式の列名（A, B, ..., Z, AA, ...）を返す。
+  const columnName = (index) => {
+    let name = '';
+    let n = index;
+    do {
+      name = String.fromCharCode(65 + (n % 26)) + name;
+      n = Math.floor(n / 26) - 1;
+    } while (n >= 0);
+    return name;
+  };
+
+  const columnCount = () =>
+    rows.reduce((max, row) => Math.max(max, row.length), 0);
+
+  const stopEditing = (commit) => {
+    if (!editing) {
+      return;
+    }
+    const { rowIndex, colIndex, input, cell } = editing;
+    editing = null;
+    if (commit) {
+      rows[rowIndex][colIndex] = input.value;
+    }
+    cell.textContent = rows[rowIndex][colIndex];
+    cell.classList.remove('is-editing');
+  };
+
+  const startEditing = (cell, rowIndex, colIndex) => {
+    stopEditing(true);
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = rows[rowIndex][colIndex];
+    cell.textContent = '';
+    cell.appendChild(input);
+    cell.classList.add('is-editing');
+    editing = { rowIndex, colIndex, input, cell };
+    input.focus();
+    input.select();
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        stopEditing(true);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        stopEditing(false);
+      }
+    });
+    input.addEventListener('blur', () => {
+      stopEditing(true);
+    });
+  };
+
+  const render = () => {
+    stopEditing(false);
+    grid.textContent = '';
+
+    const thead = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    headRow.appendChild(document.createElement('th'));
+    for (let colIndex = 0; colIndex < columnCount(); colIndex++) {
+      const th = document.createElement('th');
+      const label = document.createElement('span');
+      label.textContent = columnName(colIndex);
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'mini-button';
+      deleteButton.textContent = '×';
+      deleteButton.title = 'この列を削除';
+      deleteButton.addEventListener('click', () => {
+        for (const row of rows) {
+          row.splice(colIndex, 1);
+        }
+        render();
+      });
+      th.append(label, deleteButton);
+      headRow.appendChild(th);
+    }
+    thead.appendChild(headRow);
+    grid.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    rows.forEach((row, rowIndex) => {
+      const tr = document.createElement('tr');
+
+      const rowHeader = document.createElement('th');
+      const label = document.createElement('span');
+      label.textContent = String(rowIndex + 1);
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.className = 'mini-button';
+      deleteButton.textContent = '×';
+      deleteButton.title = 'この行を削除';
+      deleteButton.addEventListener('click', () => {
+        rows.splice(rowIndex, 1);
+        render();
+      });
+      rowHeader.append(label, deleteButton);
+      tr.appendChild(rowHeader);
+
+      row.forEach((value, colIndex) => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        td.addEventListener('click', () => {
+          if (!editing || editing.cell !== td) {
+            startEditing(td, rowIndex, colIndex);
+          }
+        });
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    });
+    grid.appendChild(tbody);
+
+    editor.hidden = rows.length === 0;
+  };
+
+  const openFile = async (file) => {
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      const encoding =
+        openEncoding.value === 'auto'
+          ? CsvCore.detectEncoding(bytes)
+          : openEncoding.value;
+      let text;
+      try {
+        text = CsvCore.decodeBytes(bytes, encoding);
+      } catch {
+        throw new Error(
+          `ファイルを${ENCODING_LABELS[encoding]}として読み込めませんでした。`
+        );
+      }
+
+      const delimiterKey =
+        openDelimiter.value === 'auto'
+          ? CsvCore.detectDelimiter(text)
+          : openDelimiter.value;
+      currentDelimiter = CsvCore.DELIMITERS[delimiterKey];
+      rows = CsvCore.parseCsv(text, currentDelimiter);
+
+      if (encoding === 'shift_jis' || encoding === 'utf-8') {
+        saveEncoding.value = encoding;
+      }
+      saveFilename.value = file.name;
+      render();
+      setStatusMessage(
+        `${file.name} を読み込みました（${ENCODING_LABELS[encoding]}、${rows.length}行 × ${columnCount()}列）。`,
+        true
+      );
+    } catch (error) {
+      setStatusMessage(error.message);
+    }
+  };
+
+  const download = () => {
+    try {
+      const newline = saveNewline.value === 'crlf' ? '\r\n' : '\n';
+      const text = CsvCore.serializeCsv(rows, currentDelimiter, newline);
+      const bytes = CsvCore.encodeText(
+        text,
+        saveEncoding.value,
+        saveBom.checked
+      );
+      const blob = new Blob([bytes], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = saveFilename.value || '無題.csv';
+      link.click();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setStatusMessage('ダウンロードしました。', true);
+    } catch (error) {
+      setStatusMessage(error.message);
+    }
+  };
+
+  sourceFile.addEventListener('change', () => {
+    const file = sourceFile.files[0];
+    if (file) {
+      void openFile(file);
+    }
+  });
+
+  dropArea.addEventListener('dragover', (event) => {
+    event.preventDefault();
+    dropArea.classList.add('is-dragover');
+  });
+  dropArea.addEventListener('dragleave', () => {
+    dropArea.classList.remove('is-dragover');
+  });
+  dropArea.addEventListener('drop', (event) => {
+    event.preventDefault();
+    dropArea.classList.remove('is-dragover');
+    const file = event.dataTransfer.files[0];
+    if (file) {
+      void openFile(file);
+    }
+  });
+
+  newButton.addEventListener('click', () => {
+    currentDelimiter = ',';
+    rows = [
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', ''],
+    ];
+    saveEncoding.value = 'utf-8';
+    saveFilename.value = '無題.csv';
+    render();
+    setStatusMessage('空の表を作成しました。', true);
+  });
+
+  addRowButton.addEventListener('click', () => {
+    rows.push(new Array(columnCount()).fill(''));
+    render();
+  });
+
+  addColButton.addEventListener('click', () => {
+    for (const row of rows) {
+      row.push('');
+    }
+    render();
+  });
+
+  downloadButton.addEventListener('click', download);
+});

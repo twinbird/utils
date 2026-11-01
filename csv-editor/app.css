@@ -1,0 +1,148 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f7f7f7;
+  color: #222;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
+}
+
+label {
+  display: block;
+  font-size: 18px;
+  margin: 24px 0 8px;
+}
+
+label.inline {
+  display: inline-block;
+  font-size: 16px;
+  margin: 0 16px 8px 0;
+}
+
+input,
+button,
+select {
+  font: inherit;
+}
+
+input[type='file'] {
+  display: block;
+  max-width: 100%;
+}
+
+.drop-area {
+  margin: 16px 0;
+  padding: 24px;
+  border: 2px dashed #9aa0a6;
+  border-radius: 6px;
+  text-align: center;
+  color: #555;
+  background: #fff;
+}
+
+.drop-area.is-dragover {
+  border-color: #007bff;
+  background: #e8f0fe;
+}
+
+.option-row {
+  margin: 16px 0;
+}
+
+.button-row {
+  margin: 20px 0 12px;
+}
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  background: #007bff;
+}
+
+button:disabled {
+  background: #9aa0a6;
+  cursor: not-allowed;
+}
+
+.status-message {
+  min-height: 24px;
+  margin: 0 0 16px;
+  color: #c62828;
+}
+
+.status-message.is-success {
+  color: #2e7d32;
+}
+
+.note {
+  color: #555;
+  font-size: 14px;
+}
+
+.grid-wrapper {
+  overflow: auto;
+  margin: 12px 0 20px;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+#grid {
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+#grid th,
+#grid td {
+  border: 1px solid #ddd;
+  padding: 4px 8px;
+  min-width: 80px;
+  text-align: left;
+  font-weight: normal;
+}
+
+#grid thead th,
+#grid tbody th {
+  background: #f1f3f4;
+  color: #555;
+  min-width: 0;
+}
+
+#grid td {
+  cursor: text;
+}
+
+#grid td.is-editing {
+  padding: 0;
+}
+
+#grid td input {
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.mini-button {
+  margin-left: 6px;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: #9aa0a6;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+a,
+a:visited {
+  color: #0000ee;
+}

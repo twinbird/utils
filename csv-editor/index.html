@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSVエディタ</title>
+    <meta
+      name="description"
+      content="Shift_JIS（CP932）対応のCSVエディタ。CSVファイルをブラウザー内で表示・編集し、UTF-8またはShift_JISでダウンロードできます。"
+    />
+    <link rel="stylesheet" href="app.css" />
+    <script src="shift-jis-map.js" defer></script>
+    <script src="csv-core.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>CSVエディタ</h1>
+      <p>
+        CSVファイルを選ぶと表を表示します。セルをクリックすると編集できます。Shift_JIS（CP932）とUTF-8に対応し、保存時に文字コードを選べます。
+      </p>
+
+      <label for="source-file">CSVファイル</label>
+      <input id="source-file" type="file" accept=".csv,.tsv,.txt" />
+
+      <div id="drop-area" class="drop-area">
+        ここにCSVファイルをドラッグ＆ドロップしても開けます
+      </div>
+
+      <div class="option-row">
+        <label class="inline" for="open-encoding">
+          開くときの文字コード
+          <select id="open-encoding">
+            <option value="auto" selected>自動判定</option>
+            <option value="utf-8">UTF-8</option>
+            <option value="shift_jis">Shift_JIS（CP932）</option>
+          </select>
+        </label>
+        <label class="inline" for="open-delimiter">
+          区切り文字
+          <select id="open-delimiter">
+            <option value="auto" selected>自動判定</option>
+            <option value="comma">カンマ</option>
+            <option value="semicolon">セミコロン</option>
+            <option value="tab">タブ</option>
+          </select>
+        </label>
+        <button id="new-btn" type="button">空の表を作成</button>
+      </div>
+
+      <p id="status-message" class="status-message" aria-live="polite"></p>
+
+      <div id="editor" hidden>
+        <div class="button-row">
+          <button id="add-row-btn" type="button">行を追加</button>
+          <button id="add-col-btn" type="button">列を追加</button>
+        </div>
+
+        <div class="grid-wrapper">
+          <table id="grid"></table>
+        </div>
+
+        <div class="option-row">
+          <label class="inline" for="save-filename">
+            ファイル名
+            <input id="save-filename" type="text" />
+          </label>
+          <label class="inline" for="save-encoding">
+            保存時の文字コード
+            <select id="save-encoding">
+              <option value="utf-8" selected>UTF-8</option>
+              <option value="shift_jis">Shift_JIS（CP932）</option>
+            </select>
+          </label>
+          <label class="inline" for="save-newline">
+            改行コード
+            <select id="save-newline">
+              <option value="crlf" selected>CRLF</option>
+              <option value="lf">LF</option>
+            </select>
+          </label>
+          <label class="inline" for="save-bom">
+            <input id="save-bom" type="checkbox" checked />
+            UTF-8にBOMを付ける
+          </label>
+        </div>
+
+        <div class="button-row">
+          <button id="download-btn" type="button">ダウンロード</button>
+        </div>
+      </div>
+
+      <p class="note">
+        ファイルの内容はサーバーへ送信されません。すべてブラウザー内で処理します。数千行を超えるファイルは表示が重くなることがあります。
+      </p>
+    </main>
+  </body>
+</html>
