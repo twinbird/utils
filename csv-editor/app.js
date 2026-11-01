@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let rows = [];
   let currentDelimiter = ',';
   let editing = null;
+  let currentCell = null;
 
   const ENCODING_LABELS = {
     'utf-8': 'UTF-8',
@@ -74,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const startEditing = (cell, rowIndex, colIndex) => {
     stopEditing(true);
+    currentCell = { row: rowIndex, col: colIndex };
     const input = document.createElement('input');
     input.type = 'text';
     input.value = rows[rowIndex][colIndex];
@@ -183,6 +185,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     editor.hidden = rows.length === 0;
   };
+
+  // フォーカス中のセルを「現在のセル」として記録する。
+  grid.addEventListener('focusin', (event) => {
+    const cell = event.target.closest('td');
+    if (cell) {
+      currentCell = {
+        row: Number(cell.dataset.row),
+        col: Number(cell.dataset.col),
+      };
+    }
+  });
 
   // セルにフォーカスがあるときのキー操作（矢印キーで移動など）。
   grid.addEventListener('keydown', (event) => {
@@ -314,15 +327,32 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   addRowButton.addEventListener('click', () => {
-    rows.push(new Array(columnCount()).fill(''));
-    render();
+    stopEditing(true);
+    const newRow = new Array(columnCount()).fill('');
+    if (currentCell) {
+      rows.splice(currentCell.row + 1, 0, newRow);
+      render();
+      focusCell(currentCell.row + 1, currentCell.col);
+    } else {
+      rows.push(newRow);
+      render();
+    }
   });
 
   addColButton.addEventListener('click', () => {
-    for (const row of rows) {
-      row.push('');
+    stopEditing(true);
+    if (currentCell) {
+      for (const row of rows) {
+        row.splice(currentCell.col + 1, 0, '');
+      }
+      render();
+      focusCell(currentCell.row, currentCell.col + 1);
+    } else {
+      for (const row of rows) {
+        row.push('');
+      }
+      render();
     }
-    render();
   });
 
   downloadButton.addEventListener('click', download);
