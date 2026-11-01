@@ -121,6 +121,11 @@ button:disabled {
   cursor: text;
 }
 
+#grid td:focus {
+  outline: 2px solid #007bff;
+  outline-offset: -2px;
+}
+
 #grid td.is-editing {
   padding: 0;
 }

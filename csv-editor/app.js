@@ -47,6 +47,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const columnCount = () =>
     rows.reduce((max, row) => Math.max(max, row.length), 0);
 
+  const findCell = (rowIndex, colIndex) =>
+    grid.querySelector(`td[data-row="${rowIndex}"][data-col="${colIndex}"]`);
+
+  const focusCell = (rowIndex, colIndex) => {
+    const clampedRow = Math.min(Math.max(rowIndex, 0), rows.length - 1);
+    const clampedCol = Math.min(Math.max(colIndex, 0), columnCount() - 1);
+    const cell = findCell(clampedRow, clampedCol);
+    if (cell) {
+      cell.focus();
+    }
+  };
+
   const stopEditing = (commit) => {
     if (!editing) {
       return;
@@ -73,12 +85,28 @@ document.addEventListener('DOMContentLoaded', () => {
     input.select();
 
     input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
+      // 編集中の左右キーはキャレット移動に使うため、ここでは扱わない。
+      if (event.key === 'Enter' || event.key === 'Tab') {
         event.preventDefault();
+        event.stopPropagation();
         stopEditing(true);
+        if (event.key === 'Enter') {
+          focusCell(rowIndex + 1, colIndex);
+        } else if (event.shiftKey) {
+          focusCell(rowIndex, colIndex - 1);
+        } else {
+          focusCell(rowIndex, colIndex + 1);
+        }
+      } else if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+        event.preventDefault();
+        event.stopPropagation();
+        stopEditing(true);
+        focusCell(rowIndex + (event.key === 'ArrowUp' ? -1 : 1), colIndex);
       } else if (event.key === 'Escape') {
         event.preventDefault();
+        event.stopPropagation();
         stopEditing(false);
+        cell.focus();
       }
     });
     input.addEventListener('blur', () => {
@@ -102,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       deleteButton.className = 'mini-button';
       deleteButton.textContent = '×';
       deleteButton.title = 'この列を削除';
+      deleteButton.tabIndex = -1;
       deleteButton.addEventListener('click', () => {
         for (const row of rows) {
           row.splice(colIndex, 1);
@@ -126,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       deleteButton.className = 'mini-button';
       deleteButton.textContent = '×';
       deleteButton.title = 'この行を削除';
+      deleteButton.tabIndex = -1;
       deleteButton.addEventListener('click', () => {
         rows.splice(rowIndex, 1);
         render();
@@ -136,6 +166,9 @@ document.addEventListener('DOMContentLoaded', () => {
       row.forEach((value, colIndex) => {
         const td = document.createElement('td');
         td.textContent = value;
+        td.tabIndex = 0;
+        td.dataset.row = String(rowIndex);
+        td.dataset.col = String(colIndex);
         td.addEventListener('click', () => {
           if (!editing || editing.cell !== td) {
             startEditing(td, rowIndex, colIndex);
@@ -150,6 +183,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     editor.hidden = rows.length === 0;
   };
+
+  // セルにフォーカスがあるときのキー操作（矢印キーで移動など）。
+  grid.addEventListener('keydown', (event) => {
+    if (editing) {
+      return;
+    }
+    const cell = event.target.closest('td');
+    if (!cell) {
+      return;
+    }
+    const rowIndex = Number(cell.dataset.row);
+    const colIndex = Number(cell.dataset.col);
+
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      focusCell(rowIndex - 1, colIndex);
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      focusCell(rowIndex + 1, colIndex);
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      focusCell(rowIndex, colIndex - 1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      focusCell(rowIndex, colIndex + 1);
+    } else if (event.key === 'Enter' || event.key === 'F2') {
+      event.preventDefault();
+      startEditing(cell, rowIndex, colIndex);
+    } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      event.preventDefault();
+      rows[rowIndex][colIndex] = '';
+      cell.textContent = '';
+    }
+  });
 
   const openFile = async (file) => {
     try {
