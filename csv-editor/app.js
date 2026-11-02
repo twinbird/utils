@@ -3,19 +3,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const sourceFile = document.getElementById('source-file');
   const dropArea = document.getElementById('drop-area');
+  const dropPrompt = document.getElementById('drop-prompt');
+  const openControls = document.getElementById('open-controls');
   const openEncoding = document.getElementById('open-encoding');
-  const openDelimiter = document.getElementById('open-delimiter');
   const newButton = document.getElementById('new-btn');
   const statusMessage = document.getElementById('status-message');
   const editor = document.getElementById('editor');
+  const editorToolbar = document.getElementById('editor-toolbar');
   const grid = document.getElementById('grid');
   const addRowButton = document.getElementById('add-row-btn');
   const addColButton = document.getElementById('add-col-btn');
+  const downloadButton = document.getElementById('download-btn');
+  const openButton = document.getElementById('open-btn');
+  const saveModal = document.getElementById('save-modal');
   const saveFilename = document.getElementById('save-filename');
   const saveEncoding = document.getElementById('save-encoding');
   const saveNewline = document.getElementById('save-newline');
   const saveBom = document.getElementById('save-bom');
-  const downloadButton = document.getElementById('download-btn');
+  const saveError = document.getElementById('save-error');
+  const saveCancelButton = document.getElementById('save-cancel-btn');
+  const saveConfirmButton = document.getElementById('save-confirm-btn');
 
   let rows = [];
   let currentDelimiter = ',';
@@ -183,7 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     grid.appendChild(tbody);
 
-    editor.hidden = rows.length === 0;
+    // 表があるときはドロップエリアがそのまま表の枠になり、
+    // 左上は文字コード選択からアイコンボタン群に切り替わる。
+    const hasRows = rows.length > 0;
+    editor.hidden = !hasRows;
+    dropPrompt.hidden = hasRows;
+    openControls.hidden = hasRows;
+    editorToolbar.hidden = !hasRows;
+    dropArea.classList.toggle('is-editor', hasRows);
   };
 
   // フォーカス中のセルを「現在のセル」として記録する。
@@ -247,10 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
         );
       }
 
-      const delimiterKey =
-        openDelimiter.value === 'auto'
-          ? CsvCore.detectDelimiter(text)
-          : openDelimiter.value;
+      // 区切り文字は自動判定のみ（UI簡素化のため）。
+      const delimiterKey = CsvCore.detectDelimiter(text);
       currentDelimiter = CsvCore.DELIMITERS[delimiterKey];
       rows = CsvCore.parseCsv(text, currentDelimiter);
 
@@ -266,6 +278,23 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       setStatusMessage(error.message);
     }
+  };
+
+  const updateBomState = () => {
+    saveBom.disabled = saveEncoding.value === 'shift_jis';
+  };
+
+  const openSaveModal = () => {
+    stopEditing(true);
+    saveError.textContent = '';
+    updateBomState();
+    saveModal.hidden = false;
+    saveFilename.focus();
+    saveFilename.select();
+  };
+
+  const closeSaveModal = () => {
+    saveModal.hidden = true;
   };
 
   const download = () => {
@@ -285,8 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
       link.click();
       window.setTimeout(() => URL.revokeObjectURL(url), 1000);
       setStatusMessage('ダウンロードしました。', true);
+      return true;
     } catch (error) {
+      // モーダルを開いたまま、理由をモーダル内に表示する。
+      saveError.textContent = error.message;
       setStatusMessage(error.message);
+      return false;
     }
   };
 
@@ -295,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (file) {
       void openFile(file);
     }
+    sourceFile.value = '';
   });
 
   dropArea.addEventListener('dragover', (event) => {
@@ -313,7 +347,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  newButton.addEventListener('click', () => {
+  // ドロップエリア（表になる前）のクリックでファイル選択を開く。
+  dropPrompt.addEventListener('click', () => {
+    sourceFile.click();
+  });
+
+  newButton.addEventListener('click', (event) => {
+    event.stopPropagation();
     currentDelimiter = ',';
     rows = [
       ['', '', ''],
@@ -355,5 +395,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  downloadButton.addEventListener('click', download);
+  downloadButton.addEventListener('click', openSaveModal);
+  openButton.addEventListener('click', () => {
+    sourceFile.click();
+  });
+
+  saveEncoding.addEventListener('change', updateBomState);
+  saveCancelButton.addEventListener('click', closeSaveModal);
+  saveConfirmButton.addEventListener('click', () => {
+    if (download()) {
+      closeSaveModal();
+    }
+  });
+  saveModal.addEventListener('click', (event) => {
+    if (event.target === saveModal) {
+      closeSaveModal();
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !saveModal.hidden) {
+      closeSaveModal();
+    }
+  });
 });

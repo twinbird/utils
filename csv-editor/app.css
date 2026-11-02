@@ -1,3 +1,7 @@
+[hidden] {
+  display: none !important;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
@@ -12,52 +16,13 @@ body {
 
 h1 {
   text-align: center;
-}
-
-label {
-  display: block;
-  font-size: 18px;
-  margin: 24px 0 8px;
-}
-
-label.inline {
-  display: inline-block;
-  font-size: 16px;
-  margin: 0 16px 8px 0;
+  margin: 8px 0 16px;
 }
 
 input,
 button,
 select {
   font: inherit;
-}
-
-input[type='file'] {
-  display: block;
-  max-width: 100%;
-}
-
-.drop-area {
-  margin: 16px 0;
-  padding: 24px;
-  border: 2px dashed #9aa0a6;
-  border-radius: 6px;
-  text-align: center;
-  color: #555;
-  background: #fff;
-}
-
-.drop-area.is-dragover {
-  border-color: #007bff;
-  background: #e8f0fe;
-}
-
-.option-row {
-  margin: 16px 0;
-}
-
-.button-row {
-  margin: 20px 0 12px;
 }
 
 button {
@@ -74,9 +39,90 @@ button:disabled {
   cursor: not-allowed;
 }
 
+.button-secondary {
+  background: #9aa0a6;
+}
+
+/* ファイルを開く前は破線のドロップエリア、開いた後は表の枠になる。 */
+.drop-area {
+  padding: 12px;
+  border: 2px dashed #9aa0a6;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.drop-area.is-editor {
+  border: 1px solid #ccc;
+}
+
+.drop-area.is-dragover {
+  border-color: #007bff;
+  background: #e8f0fe;
+}
+
+.area-toolbar {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+}
+
+.open-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #555;
+}
+
+.open-controls select {
+  font-size: 14px;
+  padding: 4px 6px;
+}
+
+.icon-toolbar {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #dadce0;
+  border-radius: 6px;
+  color: #444;
+  background: #fff;
+}
+
+.icon-button:hover {
+  background: #e8f0fe;
+  border-color: #007bff;
+  color: #007bff;
+}
+
+.drop-prompt {
+  padding: 72px 16px 84px;
+  text-align: center;
+  color: #555;
+  cursor: pointer;
+}
+
+.drop-main {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.drop-sub {
+  margin: 0 0 24px;
+  font-size: 14px;
+}
+
 .status-message {
   min-height: 24px;
-  margin: 0 0 16px;
+  margin: 12px 0 0;
   color: #c62828;
 }
 
@@ -84,16 +130,10 @@ button:disabled {
   color: #2e7d32;
 }
 
-.note {
-  color: #555;
-  font-size: 14px;
-}
-
 .grid-wrapper {
   overflow: auto;
-  margin: 12px 0 20px;
+  max-height: calc(100vh - 220px);
   background: #fff;
-  border: 1px solid #ccc;
 }
 
 #grid {
@@ -145,6 +185,67 @@ button:disabled {
   background: #9aa0a6;
   font-size: 12px;
   line-height: 1.6;
+}
+
+/* 保存モーダル */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-backdrop[hidden] {
+  display: none;
+}
+
+.modal {
+  width: min(420px, 90vw);
+  box-sizing: border-box;
+  padding: 24px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.modal h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+}
+
+.modal label {
+  display: block;
+  font-size: 16px;
+  margin: 16px 0 0;
+}
+
+.modal label.checkbox {
+  font-size: 14px;
+}
+
+.modal input[type='text'],
+.modal select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 6px 8px;
+}
+
+.modal-error {
+  min-height: 20px;
+  margin: 12px 0 0;
+  color: #c62828;
+  font-size: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
 }
 
 a,

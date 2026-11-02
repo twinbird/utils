@@ -16,83 +16,171 @@
   <body>
     <main class="container">
       <h1>CSVエディタ</h1>
-      <p>
-        CSVファイルを選ぶと表を表示します。セルをクリックすると編集できます。セルにフォーカスがあるときは矢印キーで移動でき、Enterで編集を始められます。Shift_JIS（CP932）とUTF-8に対応し、保存時に文字コードを選べます。
-      </p>
-
-      <label for="source-file">CSVファイル</label>
-      <input id="source-file" type="file" accept=".csv,.tsv,.txt" />
 
       <div id="drop-area" class="drop-area">
-        ここにCSVファイルをドラッグ＆ドロップしても開けます
-      </div>
+        <div class="area-toolbar">
+          <label id="open-controls" class="open-controls" for="open-encoding">
+            <span class="toolbar-label">開くときの文字コード</span>
+            <select id="open-encoding">
+              <option value="auto" selected>自動判定</option>
+              <option value="utf-8">UTF-8</option>
+              <option value="shift_jis">Shift_JIS（CP932）</option>
+            </select>
+          </label>
 
-      <div class="option-row">
-        <label class="inline" for="open-encoding">
-          開くときの文字コード
-          <select id="open-encoding">
-            <option value="auto" selected>自動判定</option>
-            <option value="utf-8">UTF-8</option>
-            <option value="shift_jis">Shift_JIS（CP932）</option>
-          </select>
-        </label>
-        <label class="inline" for="open-delimiter">
-          区切り文字
-          <select id="open-delimiter">
-            <option value="auto" selected>自動判定</option>
-            <option value="comma">カンマ</option>
-            <option value="semicolon">セミコロン</option>
-            <option value="tab">タブ</option>
-          </select>
-        </label>
-        <button id="new-btn" type="button">空の表を作成</button>
+          <div id="editor-toolbar" class="icon-toolbar" hidden>
+            <button
+              id="add-row-btn"
+              type="button"
+              class="icon-button"
+              title="行を下に追加"
+              aria-label="行を下に追加"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <path d="M4 5h16" />
+                <path d="M4 11h16" />
+                <path d="M4 17h9" />
+                <path d="M18 14v6" />
+                <path d="M15 17h6" />
+              </svg>
+            </button>
+            <button
+              id="add-col-btn"
+              type="button"
+              class="icon-button"
+              title="列を右に追加"
+              aria-label="列を右に追加"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              >
+                <path d="M5 4v16" />
+                <path d="M11 4v16" />
+                <path d="M17 4v9" />
+                <path d="M14 18h6" />
+                <path d="M17 15v6" />
+              </svg>
+            </button>
+            <button
+              id="download-btn"
+              type="button"
+              class="icon-button"
+              title="保存（ダウンロード）"
+              aria-label="保存（ダウンロード）"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 4v11" />
+                <path d="M7 11l5 5 5-5" />
+                <path d="M5 20h14" />
+              </svg>
+            </button>
+            <button
+              id="open-btn"
+              type="button"
+              class="icon-button"
+              title="別のファイルを開く"
+              aria-label="別のファイルを開く"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M3 7a1 1 0 0 1 1-1h5l2 2h9a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="drop-prompt" class="drop-prompt">
+          <p class="drop-main">CSVファイルをドラッグ＆ドロップ</p>
+          <p class="drop-sub">またはクリックしてファイルを選択</p>
+          <button id="new-btn" type="button">空の表を作成</button>
+        </div>
+
+        <div id="editor" hidden>
+          <div class="grid-wrapper">
+            <table id="grid"></table>
+          </div>
+        </div>
+
+        <input id="source-file" type="file" accept=".csv,.tsv,.txt" hidden />
       </div>
 
       <p id="status-message" class="status-message" aria-live="polite"></p>
 
-      <div id="editor" hidden>
-        <div class="button-row">
-          <button id="add-row-btn" type="button">行を下に追加</button>
-          <button id="add-col-btn" type="button">列を右に追加</button>
-        </div>
+      <div id="save-modal" class="modal-backdrop" hidden>
+        <div
+          class="modal"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="save-modal-title"
+        >
+          <h2 id="save-modal-title">保存</h2>
 
-        <div class="grid-wrapper">
-          <table id="grid"></table>
-        </div>
-
-        <div class="option-row">
-          <label class="inline" for="save-filename">
+          <label for="save-filename">
             ファイル名
             <input id="save-filename" type="text" />
           </label>
-          <label class="inline" for="save-encoding">
-            保存時の文字コード
+          <label for="save-encoding">
+            文字コード
             <select id="save-encoding">
               <option value="utf-8" selected>UTF-8</option>
               <option value="shift_jis">Shift_JIS（CP932）</option>
             </select>
           </label>
-          <label class="inline" for="save-newline">
+          <label for="save-newline">
             改行コード
             <select id="save-newline">
               <option value="crlf" selected>CRLF</option>
               <option value="lf">LF</option>
             </select>
           </label>
-          <label class="inline" for="save-bom">
+          <label class="checkbox" for="save-bom">
             <input id="save-bom" type="checkbox" checked />
             UTF-8にBOMを付ける
           </label>
-        </div>
 
-        <div class="button-row">
-          <button id="download-btn" type="button">ダウンロード</button>
+          <p id="save-error" class="modal-error" aria-live="polite"></p>
+
+          <div class="modal-actions">
+            <button id="save-cancel-btn" type="button" class="button-secondary">
+              キャンセル
+            </button>
+            <button id="save-confirm-btn" type="button">ダウンロード</button>
+          </div>
         </div>
       </div>
-
-      <p class="note">
-        ファイルの内容はサーバーへ送信されません。すべてブラウザー内で処理します。数千行を超えるファイルは表示が重くなることがあります。
-      </p>
     </main>
   </body>
 </html>
