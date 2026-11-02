@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('save-btn');
   const fileNameLabel = document.getElementById('file-name');
   const statusMessage = document.getElementById('status-message');
-  const charCount = document.getElementById('char-count');
   const saveModal = document.getElementById('save-modal');
   const saveFilename = document.getElementById('save-filename');
   const saveFormat = document.getElementById('save-format');
@@ -77,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const render = () => {
     preview.innerHTML = markedApi.parse(editor.value);
-    charCount.textContent = `${editor.value.length}文字`;
   };
 
   const persist = () => {
