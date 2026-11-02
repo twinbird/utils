@@ -37,6 +37,11 @@ document.addEventListener('DOMContentLoaded', () => {
     '| --- | --- |',
     '| 形式 | Markdown / HTML で保存可能 |',
     '',
+    '```mermaid',
+    'graph TD;',
+    '  A[書く] --> B[プレビュー];',
+    '```',
+    '',
   ].join('\n');
 
   let currentFilename = DEFAULT_FILENAME;
@@ -74,8 +79,82 @@ document.addEventListener('DOMContentLoaded', () => {
     statusMessage.classList.toggle('is-success', isSuccess);
   };
 
+  // mermaid は大きい（約5.5MB）ため、```mermaid ブロックがあるときだけ
+  // 初回に読み込む。読み込みは一度だけ行う。
+  let mermaidApi = null;
+  let mermaidLoading = null;
+  const ensureMermaid = () => {
+    if (mermaidApi) {
+      return Promise.resolve(mermaidApi);
+    }
+    if (!mermaidLoading) {
+      mermaidLoading = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'mermaid.min.js';
+        script.onload = () => {
+          if (window.mermaid) {
+            window.mermaid.initialize({
+              startOnLoad: false,
+              securityLevel: 'strict',
+              suppressErrorRendering: true,
+            });
+            mermaidApi = window.mermaid;
+            resolve(mermaidApi);
+          } else {
+            reject(new Error('mermaidを読み込めませんでした。'));
+          }
+        };
+        script.onerror = () => {
+          reject(new Error('mermaidを読み込めませんでした。'));
+        };
+        document.head.appendChild(script);
+      });
+    }
+    return mermaidLoading;
+  };
+
+  // container 内の mermaid コードブロックを図（SVG）に置き換える。
+  // 描画に失敗したブロックはコードブロックのまま残す。
+  const applyMermaid = async (container, idPrefix, shouldAbort) => {
+    const blocks = container.querySelectorAll('pre code.language-mermaid');
+    if (blocks.length === 0) {
+      return;
+    }
+    let api;
+    try {
+      api = await ensureMermaid();
+    } catch {
+      return;
+    }
+    let index = 0;
+    for (const code of blocks) {
+      if (shouldAbort && shouldAbort()) {
+        return;
+      }
+      const pre = code.parentElement;
+      const source = code.textContent.trim();
+      const id = `${idPrefix}-${index++}`;
+      try {
+        const { svg } = await api.render(id, source);
+        if (shouldAbort && shouldAbort()) {
+          return;
+        }
+        const wrapper = document.createElement('div');
+        wrapper.className = 'mermaid-diagram';
+        wrapper.innerHTML = svg;
+        pre.replaceWith(wrapper);
+      } catch {
+        // 失敗時に body へ残ることがある一時要素を掃除する。
+        document.getElementById(`d${id}`)?.remove();
+      }
+    }
+  };
+
+  let renderSeq = 0;
   const render = () => {
+    const seq = ++renderSeq;
     preview.innerHTML = markedApi.parse(editor.value);
+    void applyMermaid(preview, `mmd-${seq}`, () => seq !== renderSeq);
   };
 
   const persist = () => {
@@ -117,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'th, td { border: 1px solid #ddd; padding: 4px 10px; }',
       'blockquote { margin-left: 0; padding-left: 12px; border-left: 4px solid #ddd; color: #555; }',
       'img { max-width: 100%; }',
+      '.mermaid-diagram svg { max-width: 100%; height: auto; }',
       '</style>',
       '</head>',
       '<body>',
@@ -126,14 +206,19 @@ document.addEventListener('DOMContentLoaded', () => {
       '',
     ].join('\n');
 
-  const download = () => {
+  const download = async () => {
     const isHtml = saveFormat.value === 'html';
     const filename = saveFilename.value.trim() || DEFAULT_FILENAME;
+    let bodyHtml = '';
+    if (isHtml) {
+      // HTML保存時はプレビューと同じく図も描画してから書き出す。
+      const container = document.createElement('div');
+      container.innerHTML = markedApi.parse(editor.value);
+      await applyMermaid(container, 'mmd-export');
+      bodyHtml = container.innerHTML;
+    }
     const content = isHtml
-      ? buildHtmlDocument(
-          filename.replace(/\.html?$/i, ''),
-          markedApi.parse(editor.value)
-        )
+      ? buildHtmlDocument(filename.replace(/\.html?$/i, ''), bodyHtml)
       : editor.value;
     const blob = new Blob([content], {
       type: isHtml ? 'text/html' : 'text/markdown',
@@ -243,8 +328,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   saveCancelButton.addEventListener('click', closeSaveModal);
   saveConfirmButton.addEventListener('click', () => {
-    download();
-    closeSaveModal();
+    void (async () => {
+      await download();
+      closeSaveModal();
+    })();
   });
   saveModal.addEventListener('click', (event) => {
     if (event.target === saveModal) {

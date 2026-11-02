@@ -169,6 +169,16 @@ button {
   max-width: 100%;
 }
 
+.mermaid-diagram {
+  margin: 12px 0;
+  text-align: center;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
 .status-message {
   min-height: 20px;
   margin: 6px 0 0;
