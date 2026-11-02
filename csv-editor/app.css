@@ -64,6 +64,7 @@ button:disabled {
   display: flex;
   align-items: center;
   min-height: 36px;
+  margin-bottom: 8px;
 }
 
 .open-controls {
