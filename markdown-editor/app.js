@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!mermaidLoading) {
       mermaidLoading = new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = 'mermaid.min.js';
+        script.src = 'vendor/mermaid.min.js';
         script.onload = () => {
           if (window.mermaid) {
             window.mermaid.initialize({

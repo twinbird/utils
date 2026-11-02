@@ -8,6 +8,7 @@ module.exports = [
       'node_modules/**',
       '_site/**',
       'heic-to-jpeg/vendor/**',
+      'markdown-editor/vendor/**',
     ],
   },
   js.configs.recommended,
